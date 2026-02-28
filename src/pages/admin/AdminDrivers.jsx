@@ -17,6 +17,7 @@ export default function AdminDrivers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [view, setView] = useState("table");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [updatingId, setUpdatingId] = useState("");
 
   const fetchDrivers = async () => {
@@ -63,6 +64,30 @@ export default function AdminDrivers() {
       photoUrls: driver.photoUrls || {},
     }));
   }, [drivers]);
+
+  const statusCounts = useMemo(() => {
+    const counts = {
+      all: normalizedDrivers.length,
+      approved: 0,
+      pending: 0,
+      rejected: 0,
+    };
+
+    normalizedDrivers.forEach((driver) => {
+      if (counts[driver.status] !== undefined) {
+        counts[driver.status] += 1;
+      }
+    });
+
+    return counts;
+  }, [normalizedDrivers]);
+
+  const filteredDrivers = useMemo(() => {
+    if (statusFilter === "all") {
+      return normalizedDrivers;
+    }
+    return normalizedDrivers.filter((driver) => driver.status === statusFilter);
+  }, [normalizedDrivers, statusFilter]);
 
   const handleStatusChange = async (driverId, status) => {
     setUpdatingId(driverId);
@@ -134,6 +159,31 @@ export default function AdminDrivers() {
           </div>
         </div>
 
+        <div className="mt-6 flex flex-wrap gap-2">
+          {[
+            { key: "all", label: "All" },
+            { key: "approved", label: "Approved" },
+            { key: "pending", label: "Pending" },
+            { key: "rejected", label: "Rejected" },
+          ].map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => setStatusFilter(item.key)}
+              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs ${
+                statusFilter === item.key
+                  ? "border-white bg-white text-slate-900"
+                  : "border-white/15 text-blue-200/80"
+              }`}
+            >
+              {item.label}
+              <span className="rounded-full bg-slate-800/70 px-2 py-0.5 text-[11px] text-blue-100">
+                {statusCounts[item.key]}
+              </span>
+            </button>
+          ))}
+        </div>
+
         {error && (
           <div className="mt-6 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
             {error}
@@ -149,7 +199,7 @@ export default function AdminDrivers() {
               />
             ))}
           </div>
-        ) : normalizedDrivers.length === 0 ? (
+        ) : filteredDrivers.length === 0 ? (
           <div className="mt-10 rounded-2xl border border-white/10 bg-slate-900/70 p-6 text-center">
             <p className="text-white font-semibold">No drivers found</p>
             <p className="mt-2 text-sm text-blue-200/80">
@@ -171,7 +221,7 @@ export default function AdminDrivers() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5 bg-slate-900/60 text-sm">
-                {normalizedDrivers.map((driver) => (
+                {filteredDrivers.map((driver) => (
                   <tr key={driver.id}>
                     <td className="px-4 py-4">
                       <p className="text-white font-medium">{driver.name}</p>
@@ -253,7 +303,7 @@ export default function AdminDrivers() {
           </div>
         ) : (
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {normalizedDrivers.map((driver) => (
+            {filteredDrivers.map((driver) => (
               <div
                 key={driver.id}
                 className="rounded-2xl border border-white/10 bg-slate-900/60 p-5"

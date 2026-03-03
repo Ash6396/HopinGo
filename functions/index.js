@@ -2,6 +2,7 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const cors = require("cors");
 const { v2: cloudinary } = require("cloudinary");
+const nodemailer = require("nodemailer");
 
 admin.initializeApp();
 
@@ -91,6 +92,56 @@ exports.getSignedDeliveryUrl = functions.https.onRequest((req, res) => {
       return res.json({ url, expiresAt });
     } catch (error) {
       return res.status(500).json({ error: error.message || "Failed to sign" });
+    }
+  });
+});
+
+const getMailTransporter = () => {
+  const mailConfig = functions.config().mail || {};
+  const { user, pass } = mailConfig;
+
+  if (!user || !pass) {
+    throw new Error("Missing mail config in Firebase Functions.");
+  }
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: { user, pass },
+  });
+};
+
+exports.sendContactEmail = functions.https.onRequest((req, res) => {
+  corsHandler(req, res, async () => {
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Method not allowed" });
+    }
+
+    try {
+      const { name, email, phone, subject, message } = req.body || {};
+
+      if (!name || !email || !subject || !message) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const transporter = getMailTransporter();
+      const mailConfig = functions.config().mail || {};
+      const toAddress = mailConfig.to || mailConfig.user;
+
+      await transporter.sendMail({
+        from: `"HopinGo Contact" <${mailConfig.user}>`,
+        to: toAddress,
+        replyTo: email,
+        subject: `Contact: ${subject}`,
+        text:
+          `Name: ${name}\n` +
+          `Email: ${email}\n` +
+          `Phone: ${phone || "-"}\n\n` +
+          `${message}`,
+      });
+
+      return res.json({ ok: true });
+    } catch (error) {
+      return res.status(500).json({ error: error.message || "Send failed" });
     }
   });
 });

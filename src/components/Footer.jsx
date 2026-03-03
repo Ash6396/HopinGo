@@ -105,7 +105,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    href="https://www.instagram.com/hopingo.offical?igsh=MXFxaTF1MWszN3g3dw%3D%3D"
+                    href="https://www.instagram.com/hopingo.offical?igsh=MXFxaTF1MWszN3g3dw=="
                     target="_blank"
                     rel="noreferrer"
                     className="hover:text-brand-400 transition-colors"

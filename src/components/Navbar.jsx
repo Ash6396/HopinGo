@@ -15,15 +15,12 @@ export default function Navbar() {
   return (
     <header className="fixed top-0 inset-x-0 z-40 border-b border-white/5 glass transition-all duration-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-brand-500 to-accent-500 shadow-[0_0_20px_rgba(20,184,166,0.5)] grid place-items-center text-white font-bold text-lg group-hover:scale-105 transition-transform duration-300">
-            H
-          </div>
-          <div className="leading-tight">
-            <p className="text-xl font-bold tracking-tight text-white">
-              HopinGo
-            </p>
-          </div>
+        <Link to="/" className="flex items-center">
+          <img
+            src="/HopingGo_Logo.png"
+            alt="HopinGo logo"
+            className="h-[180px] w-auto object-contain drop-shadow-[0_0_26px_rgba(0,0,0,0.75)]"
+          />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 border border-white/10 rounded-full px-8 py-3 bg-white/5 backdrop-blur-md">

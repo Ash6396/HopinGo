@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import { Mail, Phone } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -6,7 +7,7 @@ import Footer from "../components/Footer";
 const contactCards = [
   {
     title: "Email",
-    value: "support@navorax.in",
+    value: "navorax14@gmail.com",
     icon: Mail,
   },
   {
@@ -18,10 +19,69 @@ const contactCards = [
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
 
-  const handleSubmit = (event) => {
+  const emailConfig = {
+    serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+    templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+    publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setSubmitted(true);
+    setSubmitError("");
+    setSubmitted(false);
+    setIsSubmitting(true);
+
+    try {
+      if (
+        !emailConfig.serviceId ||
+        !emailConfig.templateId ||
+        !emailConfig.publicKey
+      ) {
+        throw new Error("Email service is not configured");
+      }
+
+      await emailjs.send(
+        emailConfig.serviceId,
+        emailConfig.templateId,
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          title: formData.subject,
+          message: formData.message,
+        },
+        emailConfig.publicKey,
+      );
+
+      setSubmitted(true);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      const message = error?.text || error?.message || "Something went wrong";
+      setSubmitError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -38,7 +98,8 @@ export default function Contact() {
                 Contact us
               </p>
               <h1 className="mt-4 text-4xl sm:text-6xl font-extrabold text-white tracking-tight">
-                Let us know how we can <span className="text-gradient">help.</span>
+                Let us know how we can{" "}
+                <span className="text-gradient">help.</span>
               </h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-300 leading-relaxed">
                 Partnerships, driver onboarding, rider feedback, or city
@@ -61,6 +122,11 @@ export default function Contact() {
                     Thanks! Your message is received.
                   </div>
                 )}
+                {submitError && (
+                  <div className="mt-6 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-300">
+                    {submitError}
+                  </div>
+                )}
 
                 <form
                   onSubmit={handleSubmit}
@@ -72,6 +138,9 @@ export default function Contact() {
                     </label>
                     <input
                       required
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
                       className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 focus:bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-medium"
                       placeholder="Your name"
                     />
@@ -83,6 +152,9 @@ export default function Contact() {
                     <input
                       type="email"
                       required
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
                       className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 focus:bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-medium"
                       placeholder="you@email.com"
                     />
@@ -92,6 +164,9 @@ export default function Contact() {
                       Phone
                     </label>
                     <input
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
                       className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 focus:bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-medium"
                       placeholder="Contact number"
                     />
@@ -102,6 +177,9 @@ export default function Contact() {
                     </label>
                     <input
                       required
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
                       className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 focus:bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-medium"
                       placeholder="How can we help?"
                     />
@@ -113,6 +191,9 @@ export default function Contact() {
                     <textarea
                       required
                       rows={4}
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
                       className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 focus:bg-black/40 px-4 py-3 text-base text-white outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all font-medium resize-none"
                       placeholder="Write your message here"
                     />
@@ -120,12 +201,13 @@ export default function Contact() {
                   <div className="sm:col-span-2 flex flex-col sm:flex-row gap-4 mt-2">
                     <button
                       type="submit"
+                      disabled={isSubmitting}
                       className="inline-flex items-center justify-center rounded-xl bg-white text-slate-900 px-8 py-3.5 text-base font-bold transition hover:-translate-y-0.5 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.4)]"
                     >
-                      Send message
+                      {isSubmitting ? "Sending..." : "Send message"}
                     </button>
                     <a
-                      href="mailto:support@navorax.in"
+                      href="mailto:navorax14@gmail.com"
                       className="inline-flex items-center justify-center rounded-xl border border-white/15 text-white px-8 py-3.5 text-base font-bold hover:bg-white/5 transition-all"
                     >
                       Email directly
@@ -155,7 +237,9 @@ export default function Contact() {
                             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                               {card.title}
                             </p>
-                            <p className="text-base font-medium text-white mt-1">{card.value}</p>
+                            <p className="text-base font-medium text-white mt-1">
+                              {card.value}
+                            </p>
                           </div>
                         </div>
                       );
@@ -164,7 +248,9 @@ export default function Contact() {
                 </div>
 
                 <div className="rounded-[2rem] border border-brand-500/20 bg-gradient-premium p-8 sm:p-10">
-                  <p className="text-sm font-semibold uppercase tracking-wider text-brand-400">Drivers</p>
+                  <p className="text-sm font-semibold uppercase tracking-wider text-brand-400">
+                    Drivers
+                  </p>
                   <h3 className="mt-3 text-2xl font-bold text-white">
                     Want to drive with us?
                   </h3>

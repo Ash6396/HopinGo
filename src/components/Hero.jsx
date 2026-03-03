@@ -23,7 +23,7 @@ export default function Hero() {
             </span>
             Live Beta Available Now
           </motion.div>
-          
+
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -31,17 +31,22 @@ export default function Hero() {
             className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1]"
           >
             India’s First <br className="hidden sm:block" />
-            <span className="text-gradient drop-shadow-sm">0% Commission</span> <br className="hidden sm:block" />
+            <span className="text-gradient drop-shadow-sm">
+              0% Commission
+            </span>{" "}
+            <br className="hidden sm:block" />
             Ride App.
           </motion.h1>
-          
+
           <motion.p
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto xl:mx-0 leading-relaxed"
           >
-            Experience a new era of ride-sharing where drivers keep <strong className="text-white font-bold">100%</strong> of their earnings and riders pay less. Powered by NavoraX.
+            Experience a new era of ride-sharing where drivers keep{" "}
+            <strong className="text-white font-bold">100%</strong> of their
+            earnings and riders pay less. Powered by NavoraX.
           </motion.p>
 
           <motion.div
@@ -56,20 +61,26 @@ export default function Hero() {
               className="group relative inline-flex items-center justify-center gap-2 rounded-full bg-white text-slate-950 px-8 py-4 text-base font-bold overflow-hidden transition-transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.3)]"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-white via-slate-200 to-white opacity-0 group-hover:opacity-100 transition-opacity" />
-              <Download size={20} className="relative z-10 group-hover:-translate-y-1 transition-transform" />
+              <Download
+                size={20}
+                className="relative z-10 group-hover:-translate-y-1 transition-transform"
+              />
               <span className="relative z-10">Download App</span>
             </Link>
-            
+
             <a
               href="#driver"
               className="group inline-flex items-center justify-center gap-2 rounded-full glass px-8 py-4 text-base font-bold text-white hover:bg-white/10 hover:border-white/20 transition-all hover:scale-105"
             >
-              <ShieldCheck size={20} className="text-brand-400 group-hover:text-white transition-colors" />
+              <ShieldCheck
+                size={20}
+                className="text-brand-400 group-hover:text-white transition-colors"
+              />
               <span>Apply to Drive</span>
             </a>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.8 }}
@@ -79,13 +90,17 @@ export default function Hero() {
               <div className="p-2 rounded-full bg-brand-500/10 text-brand-400">
                 <MapPin size={18} />
               </div>
-              <span className="font-medium text-slate-300">Dual-device Live Tracking</span>
+              <span className="font-medium text-slate-300">
+                Dual-device Live Tracking
+              </span>
             </div>
             <div className="flex items-center justify-center xl:justify-start gap-3">
               <div className="p-2 rounded-full bg-accent-500/10 text-accent-400">
                 <ShieldCheck size={18} />
               </div>
-              <span className="font-medium text-slate-300">Post-ride Safety Mode</span>
+              <span className="font-medium text-slate-300">
+                Post-ride Safety Mode
+              </span>
             </div>
           </motion.div>
         </div>
@@ -98,7 +113,7 @@ export default function Hero() {
         >
           <div className="relative aspect-[4/3] rounded-[2.5rem] bg-gradient-premium border border-white/10 overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(20,184,166,0.15),transparent_60%),radial-gradient(circle_at_70%_70%,rgba(168,85,247,0.15),transparent_60%)]" />
-            
+
             <div className="absolute inset-0 p-8 flex flex-col">
               <div className="flex justify-between items-center mb-6">
                 <div className="flex space-x-2">
@@ -108,9 +123,9 @@ export default function Hero() {
                 </div>
                 <div className="h-2 w-24 rounded-full bg-white/10" />
               </div>
-              
+
               <div className="flex-1 grid grid-cols-2 gap-4">
-                <motion.div 
+                <motion.div
                   initial={{ y: -20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.5 }}
@@ -120,17 +135,17 @@ export default function Hero() {
                   <div className="h-2 w-3/4 bg-white/10 rounded-full" />
                 </motion.div>
                 <div className="grid grid-rows-2 gap-4">
-                  <motion.div 
+                  <motion.div
                     initial={{ x: 20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.6 }}
                     className="glass-card rounded-2xl flex items-center justify-center p-4"
                   >
-                     <div className="h-10 w-10 rounded-full bg-accent-500/20 border border-accent-500/30 flex items-center justify-center">
-                       <MapPin className="text-accent-400" size={20} />
-                     </div>
+                    <div className="h-10 w-10 rounded-full bg-accent-500/20 border border-accent-500/30 flex items-center justify-center">
+                      <MapPin className="text-accent-400" size={20} />
+                    </div>
                   </motion.div>
-                  <motion.div 
+                  <motion.div
                     initial={{ x: 20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.7 }}
@@ -139,13 +154,13 @@ export default function Hero() {
                 </div>
               </div>
             </div>
-            
+
             {/* Decorative shiny edge */}
             <div className="absolute inset-0 rounded-[2.5rem] ring-1 ring-inset ring-white/10 pointer-events-none" />
           </div>
-          
+
           {/* Floating elements */}
-          <motion.div 
+          <motion.div
             animate={{ y: [-10, 10, -10] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             className="absolute -right-6 top-20 glass-card px-4 py-3 rounded-xl flex items-center gap-3 backdrop-blur-2xl"
@@ -154,7 +169,9 @@ export default function Hero() {
               <span className="text-green-400 font-bold text-xs">₹</span>
             </div>
             <div>
-              <p className="text-xs text-slate-400 font-medium">Driver Earnings</p>
+              <p className="text-xs text-slate-400 font-medium">
+                Driver Earnings
+              </p>
               <p className="text-sm font-bold text-white">100%</p>
             </div>
           </motion.div>
